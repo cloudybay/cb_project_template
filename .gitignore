@@ -1,6 +1,11 @@
-*.pyc
-*.log
-.DS_Store
-__MAC*
-.svn
-*.mo
+**/*.pyc
+**/migrations/*
+**/*.log
+static/*
+logfiles/*
+cache/*
+etc/settings/__init__.py
+**/__pycache__
+**/*.DS_Store
+/.coverage
+/.idea
