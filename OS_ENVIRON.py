@@ -11,7 +11,7 @@ os.environ.setdefault("HOME", HOME)
 
 
 # env for django
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "{{ project_name }}.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "etc.settings")
 
 # path for project config
 _CONF = os.path.join(HOME, 'conf')

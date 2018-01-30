@@ -38,11 +38,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # cb module here
-    #'cb.django.common',
-    #'cb.django.membership',
-    #'cb.django.console',
-
     # your app here
     '{{ project_name }}',
 )
@@ -59,11 +54,11 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.gzip.GZipMiddleware',
 )
 
-ROOT_URLCONF = '{{ project_name }}.urls'
+ROOT_URLCONF = 'etc.urls'
 
 TEMPLATES = []
 
-WSGI_APPLICATION = '{{ project_name }}.wsgi.application'
+WSGI_APPLICATION = 'etc.wsgi.application'
 
 
 # Internationalization
@@ -85,7 +80,6 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    #BASE_DIR + "/cb/static",
 )
 # List of finder classes that know how to find static files in
 # various locations.
@@ -99,11 +93,6 @@ STATICFILES_FINDERS = (
 STATIC_ROOT = BASE_DIR + '/static'
 #MEDIA_ROOT = BASE_DIR + '/media'
 
-PREFIX_URL = ''
-STATIC_URL = PREFIX_URL + '/static/'
-#MEDIA_URL = PREFIX_URL + '/media/'
-
-
-# define the host using for database settings
-HOST = 'localhost'
-
+FORCE_SCRIPT_NAME = ''
+STATIC_URL = FORCE_SCRIPT_NAME + '/static/'
+#MEDIA_URL = FORCE_SCRIPT_NAME + '/media/'

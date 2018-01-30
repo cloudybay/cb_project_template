@@ -1,19 +1,10 @@
 # -*- coding: utf-8 -*-
 
 # Database
-# https://docs.djangoproject.com/en/{{ docs_version }}/ref/settings/#databases
-
+# https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
-    },
 }
 
 
@@ -28,8 +19,8 @@ for year in range(DB_YEAR_FROM, DB_YEAR_TO):
             "ENGINE": "django.db.backends.mysql",
             "NAME": DB_PATTERN % year,
             "HOST": "",
-            "USER": "root",
-            "PASSWORD": "240730",
+            "USER": "",
+            "PASSWORD": "",
             "PORT": "",
         }
     })
