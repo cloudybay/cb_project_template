@@ -7,7 +7,7 @@ import sys
 HOME = os.path.dirname(os.path.abspath(__file__))
 if HOME not in sys.path:
     sys.path.append(HOME)
-os.environ.setdefault("HOME", HOME)
+os.environ["HOME"] = HOME
 
 
 # env for django
