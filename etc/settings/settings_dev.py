@@ -15,5 +15,7 @@ INTERNAL_IPS = tuple(INTERNAL_IPS)
 # STATIC_URL = FORCE_SCRIPT_NAME + '/static/'
 # MEDIA_URL = FORCE_SCRIPT_NAME + '/media/'
 
+# CONF_DIR = "dev"
+
 from .database import GET_DATABASES
 DATABASES = GET_DATABASES({})

@@ -11,6 +11,8 @@ ALLOWED_HOSTS = ['*']
 # STATIC_URL = FORCE_SCRIPT_NAME + '/static/'
 # MEDIA_URL = FORCE_SCRIPT_NAME + '/media/'
 
+# CONF_DIR = "prod"
+
 from .database import GET_DATABASES
 DATABASES = GET_DATABASES({})
 

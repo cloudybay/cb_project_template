@@ -9,13 +9,13 @@ https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/
 
 import os, sys
 
-HOME = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if HOME not in sys.path:
-    sys.path.append(HOME)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if BASE_DIR not in sys.path:
+    sys.path.append(BASE_DIR)
 
 import OS_ENVIRON
-os.environ.setdefault('COLLECTIVE_NAME', 'wsgi')
-#os.environ.setdefault('LOG_CONFIG', os.path.join(HOME, os.environ['CONF'], 'log.wsgi.conf'))
+os.environ['COLLECTIVE_NAME'] = 'wsgi'
+# os.environ['LOG_CONFIG'] = os.path.join(BASE_DIR, os.environ['CONF'], 'log.wsgi.conf')
 
 
 from django.conf import settings
