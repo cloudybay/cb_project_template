@@ -22,7 +22,7 @@ BASE_DIR = os.environ['BASE_DIR']
 # See https://docs.djangoproject.com/en/{{ docs_version }}/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '{{ secret_key }}'
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -54,11 +54,11 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.gzip.GZipMiddleware',
 )
 
-ROOT_URLCONF = 'etc.urls'
+ROOT_URLCONF = '{{ project_name }}.urls'
 
 TEMPLATES = []
 
-WSGI_APPLICATION = 'etc.wsgi.application'
+WSGI_APPLICATION = '{{ project_name }}.wsgi.application'
 
 
 # Internationalization
@@ -86,16 +86,13 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    #'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 
 STATIC_ROOT = BASE_DIR + '/static'
-#MEDIA_ROOT = BASE_DIR + '/media'
+# MEDIA_ROOT = BASE_DIR + '/media'
 
 FORCE_SCRIPT_NAME = ''
 STATIC_URL = FORCE_SCRIPT_NAME + '/static/'
-#MEDIA_URL = FORCE_SCRIPT_NAME + '/media/'
-
-
-CONF_DIR = ''
+# MEDIA_URL = FORCE_SCRIPT_NAME + '/media/'

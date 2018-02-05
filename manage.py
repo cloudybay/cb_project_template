@@ -15,7 +15,7 @@ def __check_git_pre_commit(home):
 if __name__ == "__main__":
     __check_git_pre_commit(os.path.dirname(os.path.abspath(__file__)))
 
-    import OS_ENVIRON
+    import env
     os.environ.setdefault('COLLECTIVE_NAME', 'manage')
 
     from django.core.management import execute_from_command_line
