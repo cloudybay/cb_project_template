@@ -17,7 +17,7 @@ def load_config(confile):
 def extend_settings(settingsfile):
     _config = load_config(settingsfile)
     for key in _config.keys():
-        exec("%s = _config['%s']" % (key, key))
+        globals()[key] = _config[key]
 
 
 extend_settings('django.settings')
