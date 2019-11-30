@@ -1,23 +1,22 @@
 import os
 from .settings import *
 
+OPERATION_MODE = os.environ.get("OPERATION_MODE", None)
+if OPERATION_MODE:
+    try:
+        extend_settings_name = "conf.%s.django_settings" % OPERATION_MODE
+        django_settings = __import__(
+            "conf.%s.django_settings" % OPERATION_MODE,
+            fromlist=['*']
+        )
+        if "__all__" in django_settings.__dict__:
+            names = django_settings.__dict__["__all__"]
+        else:
+            # otherwise we import all names that don't begin with _
+            names = [x for x in django_settings.__dict__ if not x.startswith("_")]
+            # names = [x for x in djanto_settings.__dict__]
+        for name in names:
+            globals()[name] = getattr(django_settings, name)
 
-def load_config(confile):
-    _config_file = os.path.join(os.environ.get('CONF'), confile)
-    _config = {}
-    if os.path.exists(_config_file):
-        try:
-            execfile(_config_file, {}, _config)
-        except NameError:
-            with open(_config_file, 'r') as f:
-                exec(f.read(), {}, _config)
-    return _config
-
-
-def extend_settings(settingsfile):
-    _config = load_config(settingsfile)
-    for key in _config.keys():
-        globals()[key] = _config[key]
-
-
-extend_settings('django.settings')
+    except Exception as e:
+        print(e)
