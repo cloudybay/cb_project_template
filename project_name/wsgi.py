@@ -18,6 +18,19 @@ os.environ['COLLECTIVE_NAME'] = 'wsgi'
 # os.environ['LOG_CONFIG'] = os.path.join(BASE_DIR, os.environ['CONF'], 'log.conf')
 
 
+""" This for nginx
+from django.conf import settings
+from django.core.wsgi import get_wsgi_application
+_application = get_wsgi_application()
+def application(environ, start_response):
+    if settings.FORCE_SCRIPT_NAME:
+        environ['PATH_INFO'] = environ['PATH_INFO'].replace(
+            settings.FORCE_SCRIPT_NAME, '', 1)
+    return _application(environ, start_response)
+"""
+
+
+""" This for apache
 from django.conf import settings
 from django.core.wsgi import get_wsgi_application
 _application = get_wsgi_application()
@@ -27,3 +40,4 @@ def application(environ, start_response):
             environ['PATH_INFO'] = environ['PATH_INFO'].replace(
                 settings.FORCE_SCRIPT_NAME, '', 1)
     return _application(environ, start_response)
+"""
