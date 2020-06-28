@@ -14,8 +14,13 @@ if BASE_DIR not in sys.path:
     sys.path.append(BASE_DIR)
 
 import env
-os.environ['COLLECTIVE_NAME'] = 'wsgi'
-# os.environ['LOG_CONFIG'] = os.path.join(BASE_DIR, os.environ['CONF'], 'log.conf')
+
+
+from cb.util.config import get_conf_abs_path
+from cb import log
+_conf = get_conf_abs_path("log.wsgi.conf")
+log.set_log_config(_conf)
+log.verbose("using log config:", _conf)
 
 
 """ This for nginx
