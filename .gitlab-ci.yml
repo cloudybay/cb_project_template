@@ -1,0 +1,132 @@
+stages:
+  - build
+  - test
+  - release
+  - deploy
+
+variables:
+
+  # Must be set...
+  IMAGE_PROJECT_DIR: /opt/CloudyBay/{PROJECT_NAME}
+  STAGING_SERVER_PORT: {STAGING_SERVER_PORT}
+
+  GIT_SUBMODULE_STRATEGY: normal
+  CONTAINER_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+
+build:
+  image: docker:19.03.12
+  stage: build
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+  services:
+    - docker:19.03.12-dind
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY_IMAGE
+  script:
+
+    ### add frontend artifacts if need...
+    - which curl || apk add curl
+    - 'curl --location --output artifacts.zip
+      --header "PRIVATE-TOKEN: $DEPLOY_TOKEN"
+      "https://gitlab.com/api/v4/projects/cloudybay%2F{FRONTEND_PROJECT}/jobs/artifacts/master/download?job=build"'
+    - unzip -o artifacts.zip && rm -rf www && mv dist www
+    ###
+
+    - cp -fp ./__setup/dockerfiles/* . || true
+    - docker pull $CONTAINER_IMAGE || true
+    - docker build --cache-from $CONTAINER_IMAGE
+      --build-arg IMAGE_PROJECT_DIR=$IMAGE_PROJECT_DIR
+      -t $CONTAINER_IMAGE .
+    - docker push $CONTAINER_IMAGE
+  only:
+    - master
+    - tags
+  tags:
+    - gpu.cb
+    - docker
+
+test:
+  stage: test
+  image: docker:19.03.12
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+  services:
+    - docker:19.03.12-dind
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY_IMAGE
+  script:
+    - which bash || apk add bash
+    - cp -fp ./__setup/dockerfiles/staging/* . || true
+    - ./make-envs.sh
+    - docker pull $CONTAINER_IMAGE
+    - docker run
+      --env-file ./.env
+      --entrypoint /bin/bash $CONTAINER_IMAGE -c "python3.6 /tmp/project/run_tests.py"
+  environment:
+    name: staging
+  only:
+    - master
+  tags:
+    - gpu.cb
+    - docker
+
+deploy_staging:
+  stage: deploy
+  before_script:
+    - sudo docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY_IMAGE
+  script:
+    - sudo rsync -avh ./ $IMAGE_PROJECT_DIR
+    - cd $IMAGE_PROJECT_DIR
+    - cp -fp ./__setup/dockerfiles/* ./__setup/dockerfiles/staging/* . || true
+    - ./make-envs.sh
+    - echo "Deploy to staging server"
+    - sudo docker pull $CONTAINER_IMAGE
+    - sudo docker-compose down
+    - sudo docker-compose up --force-recreate -d
+    - sudo docker-compose exec -T app ./wait-for-it.sh app:8080 -t 30 ||
+      (sudo docker-compose logs --tail 50 && false)
+  environment:
+    name: staging
+    url: http://gpu.cb:$STAGING_SERVER_PORT
+  only:
+    - master
+  tags:
+    - gpu.cb
+    - shell
+
+deploy_prod:
+  stage: deploy
+  image: alpine:3.12
+  script:
+    - 'which ssh-agent || ( apk add openssh-client )'
+    - 'which rsync || ( apk add rsync )'
+    - 'which bash || ( apk add bash )'
+    - 'which git || ( apk add git )'
+    - eval $(ssh-agent -s)
+    - cat "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan $SERVER_HOST >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    - cp -fp ./__setup/dockerfiles/* ./__setup/dockerfiles/prod/* . || true
+    - ./make-envs.sh
+    - rsync -avh -e "ssh -i $SSH_PRIVATE_KEY" ./ cloudybay@$SERVER_HOST:$IMAGE_PROJECT_DIR
+    - ssh cloudybay@$SERVER_HOST
+      "cd $IMAGE_PROJECT_DIR &&
+      echo "Deploy to production server" &&
+      sudo docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY_IMAGE &&
+      sudo docker pull $CONTAINER_IMAGE &&
+      sudo docker-compose -f docker-compose.yml -f docker-compose.prod.yml down &&
+      sudo docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --force-recreate -d &&
+      (sudo docker-compose -f docker-compose.yml -f docker-compose.prod.yml exec -T app ./wait-for-it.sh app:8080 -t 30 ||
+      (sudo docker-compose -f docker-compose.yml -f docker-compose.prod.yml logs --tail 50 && false))"
+  environment:
+    name: production
+    url: {PRODUCTION_URL}
+  only:
+    - tags
+  tags:
+    - gpu.cb
+    - docker
