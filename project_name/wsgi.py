@@ -14,9 +14,11 @@ if BASE_DIR not in sys.path:
     sys.path.append(BASE_DIR)
 
 import env
-os.environ['COLLECTIVE_NAME'] = 'wsgi'
-# os.environ['LOG_CONFIG'] = os.path.join(BASE_DIR, os.environ['CONF'], 'log.conf')
 
+from cb import log
+collective_name = "wsgi"
+log.set_collective_name(collective_name)
+log.verbose("using collective name:", collective_name)
 
 from django.conf import settings
 from django.core.wsgi import get_wsgi_application
