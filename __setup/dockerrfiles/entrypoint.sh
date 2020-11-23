@@ -15,7 +15,7 @@ $PYTHON bin/rp_timedrived.py -d
 
 /usr/local/bin/gunicorn \
     --preload \
-    --bind 0.0.0.0:8080 {PROJECT_NAME}.wsgi \
+    --bind 0.0.0.0:8080 {{ project_name }}.wsgi \
     --error-logfile $WORK_DIR/logfiles/gunicorn.error.log \
     --access-logfile $WORK_DIR/logfiles/gunicorn.access.log \
     --timeout 360 --workers 3 --max-requests 10000

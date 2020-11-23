@@ -7,7 +7,7 @@ stages:
 variables:
 
   # Must be set...
-  IMAGE_PROJECT_DIR: /opt/CloudyBay/{PROJECT_NAME}
+  IMAGE_PROJECT_DIR: /opt/CloudyBay/{{ project_name }}
   STAGING_SERVER_PORT: {STAGING_SERVER_PORT}
 
   GIT_SUBMODULE_STRATEGY: normal
