@@ -9,6 +9,7 @@ services:
       - /opt/CloudyBay/pkey:/opt/CloudyBay/pkey:ro
 
   app:
+    command: cloudybay 1001
     depends_on:
       - db
 
@@ -27,3 +28,6 @@ services:
       - 5432
     env_file:
       - ./.env
+
+volumes:
+  db-data:

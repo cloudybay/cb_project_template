@@ -28,12 +28,6 @@ RUN cp -f $TMP_PROJECT_DIR/env.readme $TMP_PROJECT_DIR/env.py
 ARG IMAGE_PROJECT_DIR
 RUN mkdir -p $IMAGE_PROJECT_DIR
 
-RUN groupadd -r cloudybay && useradd -m -g cloudybay cloudybay
-RUN chown -R cloudybay:cloudybay $IMAGE_PROJECT_DIR
-RUN chown -R cloudybay:cloudybay $TMP_PROJECT_DIR
-
-USER cloudybay
-
 WORKDIR $IMAGE_PROJECT_DIR
 
 ENTRYPOINT ["/tmp/project/entrypoint.sh"]

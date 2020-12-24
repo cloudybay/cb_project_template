@@ -9,20 +9,22 @@ services:
     depends_on:
       - app
     volumes:
-      - .:${IMAGE_PROJECT_DIR}
+      - ./app-data:${IMAGE_PROJECT_DIR}
     working_dir: ${IMAGE_PROJECT_DIR}
-    entrypoint: ./start-web.sh
+    entrypoint: ./__setup/dockerfiles/start-web.sh
     env_file:
       - ./.env
 
   app:
     image: "${DOCKER_IMAGE}"
     restart: unless-stopped
+    init: true
     stdin_open: true
     tty: true
     expose:
       - 8080
     volumes:
-      - .:${IMAGE_PROJECT_DIR}
+      - ./app-data:${IMAGE_PROJECT_DIR}
+    command: cloudybay 1000
     env_file:
       - ./.env
