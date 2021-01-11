@@ -1,20 +1,27 @@
 include:
   - project: 'cloudybay/cb_dood'
-    ref: master
+    ref: ci-test
     file: '/templates/.gitlab-ci.yml'
-  # 如果有前端的話 需要特別的 ci script 去 pull 前端的 artifacts
-  # - project: 'cloudybay/cb_dood'
-  #   ref: master
-  #   file: '/templates/.gitlab-ci-backend.yml'
+  - project: 'cloudybay/cb_dood'
+    ref: ci-test
+    file: '/templates/.gitlab-ci-backend.yml'
 
 variables:
+  FRONTEND_PROJECT: cloudybay%2F{ PROJECT_NAME }-frontend
+  IMAGE_PROJECT_DIR: /opt/CloudyBay/{ PROJECT_NAME }
+  STAGING_SERVER_PORT: { STAGING_SERVER_PORT }
 
-  # Must be set...
-  # 如果有前端的話
-  # FRONTEND_PROJECT: cloudybay%2Fhouse_frontend
-  IMAGE_PROJECT_DIR: /opt/CloudyBay/{project}
-  STAGING_SERVER_PORT: {port}
+build:
+  extends: .build
 
-deploy_production:
-  environment:
-    url: ''
+test:
+  extends: .test
+
+scanner:
+  extends: .scanner
+
+staging:
+  extends: .staging
+
+production:
+  extends: .production

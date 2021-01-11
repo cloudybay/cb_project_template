@@ -1,0 +1,21 @@
+FROM registry.gitlab.com/cloudybay/cb_dood/centos7python36
+
+
+ARG TMP_PROJECT_DIR=/tmp/project
+
+COPY __setup/requirements.txt $TMP_PROJECT_DIR/__setup/
+
+
+######### custom script to install package... #########
+
+RUN pip3.6 install -r $TMP_PROJECT_DIR/__setup/requirements.txt
+
+
+#######################################################
+
+# environ settings
+ENV LC_ALL=en_US.utf8 \
+    LANG=en_US.UTF-8 \
+    LANGUAGE=en_US.UTF-8
+
+

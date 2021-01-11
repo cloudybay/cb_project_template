@@ -4,30 +4,30 @@ services:
   web:
     ports:
       - "80:80"
-      - "443:443"
-    volumes:
-      - /opt/CloudyBay/pkey:/opt/CloudyBay/pkey:ro
+    #   - "443:443"
+    # volumes:
+    #   - /opt/CloudyBay/pkey:/opt/CloudyBay/pkey:ro
 
   app:
     command: cloudybay 1001
-    depends_on:
-      - db
+#     depends_on:
+#       - db
 
-  db:
-    image: postgres:12.4-alpine
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: {}
-      POSTGRES_PASSWORD: ${DATABASES_DEFAULT_PASSWORD}
-      POSTGRES_DB: {}
-    volumes:
-      - db-data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-    expose:
-      - 5432
-    env_file:
-      - ./.env
+#   db:
+#     image: postgres:12.4-alpine
+#     restart: unless-stopped
+#     environment:
+#       POSTGRES_USER: {}
+#       POSTGRES_PASSWORD: ${DATABASES_DEFAULT_PASSWORD}
+#       POSTGRES_DB: {}
+#     volumes:
+#       - db-data:/var/lib/postgresql/data
+#     ports:
+#       - "5432:5432"
+#     expose:
+#       - 5432
+#     env_file:
+#       - ./.env
 
-volumes:
-  db-data:
+# volumes:
+#   db-data:
