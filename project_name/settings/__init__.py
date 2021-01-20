@@ -1,4 +1,7 @@
 import os
+import sys
+import traceback
+
 from .settings import *
 
 OPERATION_MODE = os.environ.get("OPERATION_MODE", None)
@@ -18,5 +21,5 @@ if OPERATION_MODE:
         for name in names:
             globals()[name] = getattr(django_settings, name)
 
-    except Exception as e:
-        print(e)
+    except Exception:
+        traceback.print_exc(file=sys.stdout)
