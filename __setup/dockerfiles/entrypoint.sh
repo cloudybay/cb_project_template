@@ -8,18 +8,20 @@ USER_NAME=$1
 USER_ID=$2
 
 rsync -avh \
-    --exclude=.git \
-    --exclude=logfiles/* \
-    --exclude=media/* \
-    --exclude=data/* \
     --delete \
-    /tmp/project/ $IMAGE_PROJECT_DIR
+    --exclude=.git \
+    --include=env.py \
+    --include=logfiles \
+    --include=www/* \
+    --filter=":- .gitignore" \
+    /tmp/project/ $WORK_DIR
 
 groupadd -r $USER_NAME -g $USER_ID && useradd -m -g $USER_NAME $USER_NAME -u $USER_ID
 
-chown -R $USER_ID:$USER_ID /opt/CloudyBay
+chown -R $USER_ID:$USER_ID $(dirname $WORK_DIR)
 
-$GOSU $USER_ID $PYTHON manage.py collectstatic --no-input
+# $GOSU $USER_ID $PYTHON manage.py migrate
+# $GOSU $USER_ID $PYTHON manage.py collectstatic --no-input
 
 $GOSU $USER_ID /usr/local/bin/gunicorn \
     --preload \
