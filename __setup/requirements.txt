@@ -1,4 +1,4 @@
-Django==2.2.13
+Django==2.2.20
 django-cors-headers==3.0.2
 requests==2.19.1
 python-dateutil==2.8.0
