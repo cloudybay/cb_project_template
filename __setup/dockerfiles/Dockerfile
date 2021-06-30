@@ -1,4 +1,4 @@
-FROM registry.gitlab.com/cloudybay/{PROJECT_NAME}:base
+FROM registry.gitlab.com/cloudybay/{{ project_name }}:base
 
 ARG TMP_PROJECT_DIR=/tmp/project
 
@@ -12,5 +12,3 @@ ARG IMAGE_PROJECT_DIR
 RUN mkdir -p $IMAGE_PROJECT_DIR
 
 WORKDIR $IMAGE_PROJECT_DIR
-
-ENTRYPOINT ["/tmp/project/entrypoint.sh"]

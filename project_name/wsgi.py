@@ -7,15 +7,13 @@ For more information on this file, see
 https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/
 """
 
-import os, sys
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if BASE_DIR not in sys.path:
-    sys.path.append(BASE_DIR)
-
-import env
+from dotenv import load_dotenv
+load_dotenv()
 
 from cb import log
+from cb.util import config
+log.set_log_config(config.get_abs_path('log.conf'))
+
 collective_name = "wsgi"
 log.set_collective_name(collective_name)
 log.verbose("using collective name:", collective_name)

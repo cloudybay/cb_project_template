@@ -4,7 +4,7 @@ static/*
 logfiles/*
 cache/*
 conf/dev/*
-/env.py
+/.env
 **/__pycache__
 **/*.DS_Store
 /.coverage

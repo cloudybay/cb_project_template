@@ -4,7 +4,7 @@
 echo "IMAGE_PROJECT_DIR=$IMAGE_PROJECT_DIR" > ./.env
 echo "DOCKER_IMAGE=$CONTAINER_IMAGE" >> ./.env
 echo "STAGING_SERVER_PORT=$STAGING_SERVER_PORT" >> ./.env
-echo "OPERATION_MODE=staging" >> ./.env
+echo "OPERATION_MODE=$DEPLOY_ENV" >> ./.env
 
 
 # 這裡要放這個專案所需要的環境變數，

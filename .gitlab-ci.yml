@@ -1,15 +1,15 @@
 include:
   - project: 'cloudybay/cb_dood'
-    ref: ci-test
+    ref: ci-test-v2
     file: '/templates/.gitlab-ci.yml'
   - project: 'cloudybay/cb_dood'
-    ref: ci-test
+    ref: ci-test-v2
     file: '/templates/.gitlab-ci-backend.yml'
 
 variables:
-  FRONTEND_PROJECT: cloudybay%2F{ PROJECT_NAME }-frontend
-  IMAGE_PROJECT_DIR: /opt/CloudyBay/{ PROJECT_NAME }
-  STAGING_SERVER_PORT: { STAGING_SERVER_PORT }
+  FRONTEND_PROJECT: cloudybay%2F{{ project_name }}_frontend
+  IMAGE_PROJECT_DIR: /opt/CloudyBay/{{ project_name }}
+  STAGING_SERVER_PORT: {{ STAGING_SERVER_PORT }}
 
 build:
   extends: .build
