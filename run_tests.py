@@ -1,13 +1,12 @@
-
-import os
 import sys
 
 import django
 from django.conf import settings
 from django.test.utils import get_runner
-import env
-
 from django.test.runner import DiscoverRunner
+
+from dotenv import load_dotenv
+load_dotenv()
 
 
 class NoDbTestRunner(DiscoverRunner):
