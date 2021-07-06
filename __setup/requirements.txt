@@ -3,4 +3,4 @@ django-cors-headers==3.0.2
 requests==2.19.1
 python-dateutil==2.8.0
 gunicorn==20.1.0
-git+git://github.com/cloudybay/python-dotenv@master
+git+git://github.com/cloudybay/python-dotenv@da77001f0be17d24aac9e599a5c1b5c9a02c1213
