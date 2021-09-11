@@ -1,4 +1,4 @@
-FROM registry.gitlab.com/cloudybay/{{ project_name }}:base
+FROM registry.gitlab.com/cloudybay/{{ repository_name }}:base
 
 ARG TMP_PROJECT_DIR=/tmp/project
 
