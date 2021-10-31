@@ -9,7 +9,6 @@ include:
 variables:
   FRONTEND_PROJECT: cloudybay%2F{{ project_name }}_frontend
   IMAGE_PROJECT_DIR: /opt/CloudyBay/{{ project_name }}
-  STAGING_SERVER_PORT: {{ STAGING_SERVER_PORT }}
 
 build:
   extends: .build

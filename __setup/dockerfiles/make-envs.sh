@@ -3,7 +3,6 @@
 # These ENVs are defined by .gitlab-ci.yml
 echo "IMAGE_PROJECT_DIR=$IMAGE_PROJECT_DIR" > ./.env
 echo "DOCKER_IMAGE=$CONTAINER_IMAGE" >> ./.env
-echo "STAGING_SERVER_PORT=$STAGING_SERVER_PORT" >> ./.env
 echo "OPERATION_MODE=$DEPLOY_ENV" >> ./.env
 
 
