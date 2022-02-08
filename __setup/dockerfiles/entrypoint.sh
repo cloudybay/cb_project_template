@@ -11,6 +11,8 @@ groupadd -r $USER_NAME -g $USER_ID && useradd -m -g $USER_NAME $USER_NAME -u $US
 
 chown -R $USER_ID:$USER_ID $(dirname $WORK_DIR)
 
+$GOSU $USER_ID $PYTHON init_env.py
+
 # $GOSU $USER_ID $PYTHON manage.py migrate
 # $GOSU $USER_ID $PYTHON manage.py collectstatic --no-input
 
