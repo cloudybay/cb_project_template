@@ -1,10 +1,10 @@
 """
-WSGI config for cbgears project.
+WSGI config for {{ project_name }} project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
 For more information on this file, see
-https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/
+https://docs.djangoproject.com/en/3.2/howto/deployment/wsgi/
 """
 
 from dotenv import load_dotenv

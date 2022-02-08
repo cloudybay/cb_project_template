@@ -33,11 +33,11 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
+    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.auth',
 
     'corsheaders',
 
@@ -112,3 +112,5 @@ STATIC_ROOT = BASE_DIR + '/static'
 FORCE_SCRIPT_NAME = ''
 STATIC_URL = FORCE_SCRIPT_NAME + '/static/'
 # MEDIA_URL = FORCE_SCRIPT_NAME + '/media/'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
