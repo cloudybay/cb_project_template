@@ -2,7 +2,7 @@
 set -e
 
 WORK_DIR=$IMAGE_PROJECT_DIR
-PYTHON=/usr/bin/python3.6
+PYTHON=/usr/bin/python3
 GOSU=/usr/local/bin/gosu
 USER_NAME=$1
 USER_ID=$2
