@@ -7,6 +7,7 @@ services:
     #   - "443:443"
     # volumes:
     #   - /opt/CloudyBay/pkey:/opt/CloudyBay/pkey:ro
+    #   - /opt/CloudyBay/.well-known:/opt/CloudyBay/.well-known:ro
 
   app:
     command: cloudybay 1001
