@@ -1,7 +1,7 @@
 **/*.pyc
 **/*.log
 static/*
-logfiles/*
+logfiles/*.log
 cache/*
 conf/dev/*
 /.env
