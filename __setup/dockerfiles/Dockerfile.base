@@ -1,10 +1,13 @@
-FROM registry.gitlab.com/cloudybay/cb_dood/centos7python38
+FROM registry.gitlab.com/cloudybay/cb_dood/cb-dood:latest as cb-dood
+
+FROM registry.gitlab.com/cloudybay/cb_dood/centos7python38:latest
 
 
 ARG TMP_PROJECT_DIR=/tmp/project
 
 COPY __setup/requirements.txt $TMP_PROJECT_DIR/__setup/
 
+COPY --from=cb-dood /opt/CloudyBay/cb_dood /opt/CloudyBay/cb_dood
 
 ######### custom script to install package... #########
 
