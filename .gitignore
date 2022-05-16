@@ -9,3 +9,4 @@ conf/dev/*
 **/*.DS_Store
 /.coverage
 /.idea
+*dev.yml
