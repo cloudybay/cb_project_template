@@ -4,7 +4,7 @@ try:
     from dotenv import dotenv_values, find_dotenv, set_key
 except ImportError:
     print("No module named 'dotenv'")
-    print("Run 'pip install git+git://github.com/cloudybay/python-dotenv@master' to install it.")
+    print("Run 'pip install git+https://github.com/cloudybay/python-dotenv@master' to install it.")
     sys.exit(1)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
