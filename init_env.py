@@ -36,7 +36,7 @@ def init_dotenv():
     src_envs['BASE_DIR'] = BASE_DIR
     for env_key, value in src_envs.items():
         if env_key not in target_envs:
-            set_key(target_dotenv_file, env_key, value)
+            set_key(target_dotenv_file, env_key, value, quote_mode="never")
 
 
 if __name__ == '__main__':
