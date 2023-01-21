@@ -5,9 +5,9 @@ import os
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': os.path.join(os.environ.get("BASE_DIR"), "cache"),
-        'TIMEOUT': 30,
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': '{{ project_name }}',
+        'TIMEOUT': 0,
     }
 }
 
