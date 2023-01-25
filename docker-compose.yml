@@ -1,29 +1,103 @@
 version: '3.7'
 
 services:
-  web:
-    image: nginx
-    restart: unless-stopped
-    depends_on:
-      - app
-    volumes:
-      - ./app-data:${IMAGE_PROJECT_DIR}
-      - ./app-data/conf/${OPERATION_MODE}/nginx.conf:/etc/nginx/conf.d/default.conf
-    working_dir: ${IMAGE_PROJECT_DIR}
+  init:
+    image: $BACKEND_IMAGE
+    command: ./init.sh
+    profiles:
+      - prod
+      - staging
     env_file:
       - ./.env
 
-  app:
-    image: "${DOCKER_IMAGE}"
+  web.prod:
+    image: $FRONTEND_IMAGE
     restart: unless-stopped
+    profiles:
+      - prod
+    ports:
+      - "80:80"
+    networks:
+      - internal
+    volumes:
+      - ./logfiles:/var/log/web
+
+  web.staging:
+    image: $FRONTEND_IMAGE
+    restart: unless-stopped
+    profiles:
+      - staging
+    expose:
+      - 80
+    hostname: wd2
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.wd2.entrypoints=websecure"
+      - "traefik.http.routers.wd2.rule=Host(`wd2-staging.cloudybay.com.tw`)"
+      - "traefik.http.routers.wd2.tls=true"
+    volumes:
+      - ./data:/cluster/CloudyBay/wd
+      - ./logfiles:/var/log/web
+    networks:
+      - internal
+      - staging
+
+  app.prod:
+    image: $BACKEND_IMAGE
+    restart: unless-stopped
+    hostname: app
     init: true
-    stdin_open: true
-    tty: true
+    profiles:
+      - prod
     expose:
       - 8080
     volumes:
-      - ./app-data:${IMAGE_PROJECT_DIR}
+      - ./logfiles:/var/log/app
     entrypoint: ./entrypoint.sh
-    command: cloudybay 1000
     env_file:
       - ./.env
+    depends_on:
+      init:
+        condition: service_completed_successfully
+    networks:
+      - internal
+
+  app.staging:
+    image: $BACKEND_IMAGE
+    restart: unless-stopped
+    hostname: app
+    init: true
+    profiles:
+      - staging
+    expose:
+      - 8080
+    volumes:
+      - ./logfiles:/var/log/app
+    entrypoint: ./entrypoint.sh
+    env_file:
+      - ./.env
+    depends_on:
+      init:
+        condition: service_completed_successfully
+    networks:
+      - internal
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.4.2
+    restart: unless-stopped
+    hostname: {{ repository_name }}_beat
+    profiles:
+      - staging
+    volumes:
+      - ./filebeat.docker.yml:/usr/share/filebeat/filebeat.yml:ro
+      - ./logfiles:/var/log/app:ro
+      - filebeat:/usr/share/filebeat/data
+
+volumes:
+  filebeat:
+
+networks:
+  staging:
+    external:
+      name: traefik_net
+  internal:

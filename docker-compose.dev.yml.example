@@ -1,21 +1,13 @@
 version: '3.7'
 
 services:
-  db:
-    image: {}
-    environment:
-      # MYSQL_ROOT_PASSWORD: {}
-      # MYSQL_DATABASE: {}
-      # MYSQL_USER: {}
-      # MYSQL_PASSWORD: {}
-      # POSTGRES_USER: {}
-      # POSTGRES_PASSWORD: {}
-      # POSTGRES_DB: {}
-    volumes:
-      # - db-data:/var/lib/postgresql/data
-      # - db-data:/var/lib/mysql
+  app.dev:
+    image: $BACKEND_IMAGE
+    stdin_open: true
+    tty: true
     ports:
-      # - "{}:5432"
-      # - "{}:3306"
-volumes:
-  db-data:
+      - "8000:8000"
+    volumes:
+    command: python3 manage.py runserver 0.0.0.0:8000
+    env_file:
+      - ./.env
