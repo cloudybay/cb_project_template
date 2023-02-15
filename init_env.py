@@ -9,7 +9,7 @@ except ImportError:
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DOTENV_FILE = '.env'
-EXAMPLE_DOTENV = '.env.readme'
+EXAMPLE_DOTENV = '.env.example'
 
 
 def __check_git_pre_commit(home):
