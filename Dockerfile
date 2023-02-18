@@ -6,4 +6,4 @@ COPY --chown=cloudybay . $PROJECT_DIR
 
 WORKDIR $PROJECT_DIR
 
-RUN python3 init_env.py && DJANGO_SETTINGS_MODULE=wd.settings python3 manage.py collectstatic --no-input
+RUN python3 init_env.py && DJANGO_SETTINGS_MODULE={{ project_name }}.settings python3 manage.py collectstatic --no-input

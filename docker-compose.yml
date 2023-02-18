@@ -29,14 +29,13 @@ services:
       - staging
     expose:
       - 80
-    hostname: wd2
+    hostname: {{ project_name }}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.wd2.entrypoints=websecure"
-      - "traefik.http.routers.wd2.rule=Host(`wd2-staging.cloudybay.com.tw`)"
-      - "traefik.http.routers.wd2.tls=true"
+      - "traefik.http.routers.{{ project_name }}.entrypoints=websecure"
+      - "traefik.http.routers.{{ project_name }}.rule=Host(`{{ project_name }}-staging.cloudybay.com.tw`)"
+      - "traefik.http.routers.{{ project_name }}.tls=true"
     volumes:
-      - ./data:/cluster/CloudyBay/wd
       - ./logfiles:/var/log/web
     networks:
       - internal
