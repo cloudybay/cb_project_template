@@ -109,8 +109,7 @@ STATICFILES_FINDERS = (
 STATIC_ROOT = BASE_DIR + '/static'
 # MEDIA_ROOT = BASE_DIR + '/media'
 
-FORCE_SCRIPT_NAME = ''
-STATIC_URL = FORCE_SCRIPT_NAME + '/static/'
-# MEDIA_URL = FORCE_SCRIPT_NAME + '/media/'
+STATIC_URL = 'static/'
+# MEDIA_URL = 'media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
