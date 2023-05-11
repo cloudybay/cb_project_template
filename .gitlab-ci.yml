@@ -1,9 +1,9 @@
 include:
-  - project: 'cloudybay/cb_dood'
-    ref: container
+  - project: 'cloudybay/cb-ci-templates'
+    ref: master
     file: '/templates/.gitlab-ci.yml'
-  - project: 'cloudybay/cb_dood'
-    ref: container
+  - project: 'cloudybay/cb-ci-templates'
+    ref: master
     file: '/templates/.gitlab-ci-backend.yml'
 
 variables:
