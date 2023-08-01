@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   app.dev:
-    image: $BACKEND_IMAGE
+    image: $CONTAINER_IMAGE
     stdin_open: true
     tty: true
     ports:

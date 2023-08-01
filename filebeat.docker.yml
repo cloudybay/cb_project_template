@@ -1,0 +1,21 @@
+fields_under_root: true
+fields:
+  source: {{ repository_name }}_filebeat
+
+filebeat.inputs:
+  - type: filestream
+    id: filebeat
+    enabled: true
+    paths:
+      - /var/log/app/*.log
+    prospector.scanner.exclude_files: ['(access_log|error_log|general|gunicorn\.access|gunicorn\.error).log$']
+    parsers:
+      - multiline:
+          type: pattern
+          pattern: '^\['
+          negate: true
+          match: after
+
+output.logstash:
+  enabled: true
+  hosts: ["192.168.8.70:5044"]
