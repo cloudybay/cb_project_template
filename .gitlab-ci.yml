@@ -85,8 +85,8 @@ staging:
     - if: '$CI_COMMIT_BRANCH == "master"'
       variables:
         DEPLOY_ENV: "staging"
-        TARGET_SERVER_HOST: "dev.cloudybay.com.tw"
-        TARGET_SERVER_PORT: 61022
+        TARGET_SERVER_HOST: {}
+        TARGET_SERVER_PORT: {}
   tags:
     - gcp
     - docker
