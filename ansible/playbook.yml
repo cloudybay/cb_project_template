@@ -4,7 +4,7 @@
   hosts: staging
   vars:
     images:
-      - { registry: 'registry.gitlab.com', name: 'cloudybay/{{ repository_name }}', tag: "{{ version }}" }
+      - { registry: 'registry.gitlab.com', name: 'cloudybay/{{ repository_name }}', tag: "{% verbatim %}{{ version }}{% endverbatim %}" }
 
 {% verbatim %}
   tasks:
