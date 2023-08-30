@@ -38,7 +38,7 @@ build:
       variables:
         DEPLOY_ENV: "staging"
   tags:
-    - gpu.cb
+    - gcp
     - docker
 
 # test:
