@@ -5,6 +5,8 @@
   vars:
     images:
       - { registry: 'registry.gitlab.com', name: 'cloudybay/{{ repository_name }}', tag: "{{ version }}" }
+
+{% verbatim %}
   tasks:
     - name: Login to Gitlab Docker registry
       become: true
@@ -121,3 +123,5 @@
     - name: Remove old images
       become: true
       ansible.builtin.shell: docker rmi -f $(docker images -f dangling=true -q) || true
+
+{% endverbatim %}

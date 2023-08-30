@@ -2,13 +2,13 @@ version: '3.7'
 
 services:
   init:
-    image: {{ container_image }}
+    image: {% verbatim %}{{ container_image }}{% endverbatim %}
     command: ./init.sh
     env_file:
       - ./.env
 
   app:
-    image: {{ container_image }}
+    image: {% verbatim %}{{ container_image }}{% endverbatim %}
     restart: unless-stopped
     init: true
     expose:
