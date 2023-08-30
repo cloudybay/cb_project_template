@@ -18,9 +18,6 @@ build:
     DOCKER_DRIVER: overlay2
     DOCKER_TLS_CERTDIR: ""
     CI_PRE_CLONE_SCRIPT: umask 0022
-  services:
-    - name: docker:23.0.6-dind
-      command: ["--registry-mirror", "http://runner.cb:5000"]
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY_IMAGE
   script:
@@ -62,27 +59,24 @@ scanner:
     - sonar-scanner
   allow_failure: true
   tags:
-    - gpu.cb
+    - gcp
     - docker
 
 staging:
   stage: deploy
-  image: python:3.10-slim-buster
+  image: registry.gitlab.com/cloudybay/cb-ci-templates/ansible:master
   variables:
     CI_PRE_CLONE_SCRIPT: umask 0022
   script:
-    - apt-get update && apt-get install -y sshpass ssh
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - ssh-keyscan -p $TARGET_SERVER_PORT $TARGET_SERVER_HOST > ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
-    - ./make-envs.sh
-    - pip3 install ansible
-    - ansible-galaxy collection install community.docker
     - ansible-playbook
         -i ansible/inventory.yml ansible/playbook.yml
         --extra-vars version=$CI_COMMIT_REF_SLUG
         --extra-vars host_project_dir=$HOST_PROJECT_DIR
+        --extra-vars deploy_env=$DEPLOY_ENV
         --vault-password-file=$ANSIBLE_VAULT_PASSWORD
   environment:
     name: staging
@@ -94,7 +88,7 @@ staging:
         TARGET_SERVER_HOST: "dev.cloudybay.com.tw"
         TARGET_SERVER_PORT: 61022
   tags:
-    - gpu.cb
+    - gcp
     - docker
 
 # production:

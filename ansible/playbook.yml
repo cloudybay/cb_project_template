@@ -1,0 +1,123 @@
+---
+
+- name: Update app images
+  hosts: staging
+  vars:
+    images:
+      - { registry: 'registry.gitlab.com', name: 'cloudybay/{{ repository_name }}', tag: "{{ version }}" }
+  tasks:
+    - name: Login to Gitlab Docker registry
+      become: true
+      community.docker.docker_login:
+        username: {}
+        password: {}
+        registry_url: registry.gitlab.com
+
+    - name: Pull images
+      become: true
+      community.docker.docker_image:
+        name: "{{ item.registry }}/{{ item.name }}"
+        tag: "{{ item.tag }}"
+        source: pull
+        force_source: true
+      loop: "{{ images }}"
+      tags:
+        - pull
+
+    - name: Make sure destination dir exists
+      ansible.builtin.file:
+        path: "{{ host_project_dir }}"
+        state: directory
+
+    - name: Make sure destination dir exists
+      ansible.builtin.file:
+        path: "{{ host_project_dir }}/data"
+        state: directory
+
+    - name: Make sure destination dir exists
+      ansible.builtin.file:
+        path: "{{ host_project_dir }}/logfiles"
+        state: directory
+
+    - name: Copy .env
+      ansible.builtin.template:
+        src: "{{ playbook_dir }}/../.env.example"
+        dest: "{{ host_project_dir }}/.env"
+      var:
+      tags:
+        - copy_env
+
+    - name: Get SECRET_KEY
+      ansible.builtin.shell: "openssl rand -base64 40"
+      register: seret_key
+      tags:
+        - get_secret_key
+
+    - name: Set SECRET_KEY
+      ansible.builtin.lineinfile:
+        path: "{{ host_project_dir }}/.env"
+        regexp: "^SECRET_KEY="
+        line: "SECRET_KEY={{ seret_key.rc }}"
+      tags:
+        - set_seret_key
+      debug:
+        var: current_date_output.stdout
+
+    - name: Modify OPERATION_MODE
+      ansible.builtin.lineinfile:
+        path: "{{ host_project_dir }}/.env"
+        search_string: 'OPERATION_MODE=dev'
+        line: "OPERATION_MODE={{ deploy_env }}"
+      tags:
+        - modify_operation_mode
+
+    - name: Modify COMPOSE_PROFILES
+      ansible.builtin.lineinfile:
+        path: "{{ host_project_dir }}/.env"
+        search_string: 'COMPOSE_PROFILES=dev'
+        line: "COMPOSE_PROFILES={{ deploy_env }}"
+      tags:
+        - modify_compose_profiles
+
+    - name: Add BASE_DIR
+      ansible.builtin.lineinfile:
+        path: "{{ host_project_dir }}/.env"
+        line: "BASE_DIR=/app"
+        insertafter: EOF
+      tags:
+        - add_base_dir
+
+    - name: Copy docker-compose.yml
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/../docker-compose.yml"
+        dest: "{{ host_project_dir }}/docker-compose.yml"
+      tags:
+        - copy_docker-compose
+
+    - name: Copy filebeat.docker.yml
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/../filebeat.docker.yml"
+        dest: "{{ host_project_dir }}/filebeat.docker.yml"
+        mode: u=rw,g=r,o=r
+      tags:
+        - copy_filebeat.docker
+
+    - name: docker-compose down
+      become: true
+      ansible.builtin.shell: docker-compose down
+      args:
+        chdir: "{{ host_project_dir }}/"
+      tags:
+        - docker-compose-down
+
+    - name: docker-compose up
+      become: true
+      ansible.builtin.shell: docker-compose up -d
+      args:
+        chdir: "{{ host_project_dir }}/"
+      tags:
+        - docker-compose-up-d
+
+    - name: Remove old images
+      become: true
+      ansible.builtin.shell: docker rmi -f $(docker images -f dangling=true -q) || true

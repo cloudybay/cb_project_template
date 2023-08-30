@@ -2,13 +2,13 @@ version: '3.7'
 
 services:
   init:
-    image: $CONTAINER_IMAGE
+    image: {{ container_image }}
     command: ./init.sh
     env_file:
       - ./.env
 
-  app.staging:
-    image: $CONTAINER_IMAGE
+  app:
+    image: {{ container_image }}
     restart: unless-stopped
     init: true
     expose:
