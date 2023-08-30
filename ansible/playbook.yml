@@ -45,7 +45,6 @@
       ansible.builtin.template:
         src: "{{ playbook_dir }}/../.env.example"
         dest: "{{ host_project_dir }}/.env"
-      var:
       tags:
         - copy_env
 
@@ -62,8 +61,6 @@
         line: "SECRET_KEY={{ seret_key.rc }}"
       tags:
         - set_seret_key
-      debug:
-        var: current_date_output.stdout
 
     - name: Modify OPERATION_MODE
       ansible.builtin.lineinfile:
