@@ -111,4 +111,4 @@
       become: true
       ansible.builtin.shell: docker rmi -f $(docker images -f dangling=true -q) || true
 
-{% verbatim %}
+{% endverbatim %}
