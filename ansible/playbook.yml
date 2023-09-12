@@ -3,8 +3,7 @@
 - name: Update app images
   hosts: staging
   vars:
-    images:
-      - { registry: 'registry.gitlab.com', name: 'cloudybay/{{ repository_name }}', tag: "{% verbatim %}{{ version }}{% endverbatim %}" }
+    image: { registry: 'registry.gitlab.com', name: 'cloudybay/{{ repository_name }}', tag: "{% verbatim %}{{ version }}{% endverbatim %}" }
 
 {% verbatim %}
   tasks:
@@ -18,23 +17,12 @@
     - name: Pull images
       become: true
       community.docker.docker_image:
-        name: "{{ item.registry }}/{{ item.name }}"
-        tag: "{{ item.tag }}"
+        name: "{{ image.registry }}/{{ image.name }}"
+        tag: "{{ image.tag }}"
         source: pull
         force_source: true
-      loop: "{{ images }}"
       tags:
         - pull
-
-    - name: Make sure destination dir exists
-      ansible.builtin.file:
-        path: "{{ host_project_dir }}"
-        state: directory
-
-    - name: Make sure destination dir exists
-      ansible.builtin.file:
-        path: "{{ host_project_dir }}/data"
-        state: directory
 
     - name: Make sure destination dir exists
       ansible.builtin.file:
@@ -58,9 +46,9 @@
       ansible.builtin.lineinfile:
         path: "{{ host_project_dir }}/.env"
         regexp: "^SECRET_KEY="
-        line: "SECRET_KEY={{ seret_key.rc }}"
+        line: "SECRET_KEY={{ seret_key.stdout }}"
       tags:
-        - set_seret_key
+        - set_secret_key
 
     - name: Modify OPERATION_MODE
       ansible.builtin.lineinfile:
@@ -87,9 +75,11 @@
         - add_base_dir
 
     - name: Copy docker-compose.yml
-      ansible.builtin.copy:
+      ansible.builtin.template:
         src: "{{ playbook_dir }}/../docker-compose.yml"
         dest: "{{ host_project_dir }}/docker-compose.yml"
+      vars:
+        CONTAINER_IMAGE: "{{ image.registry }}/{{ image.name }}:{{ image.tag }}"
       tags:
         - copy_docker-compose
 
@@ -121,4 +111,4 @@
       become: true
       ansible.builtin.shell: docker rmi -f $(docker images -f dangling=true -q) || true
 
-{% endverbatim %}
+{% verbatim %}
