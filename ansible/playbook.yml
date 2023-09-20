@@ -29,50 +29,26 @@
         path: "{{ host_project_dir }}/logfiles"
         state: directory
 
-    - name: Copy .env
-      ansible.builtin.template:
-        src: "{{ playbook_dir }}/../.env.example"
-        dest: "{{ host_project_dir }}/.env"
-      tags:
-        - copy_env
-
     - name: Get SECRET_KEY
       ansible.builtin.shell: "openssl rand -base64 40"
       register: seret_key
       tags:
         - get_secret_key
 
-    - name: Set SECRET_KEY
-      ansible.builtin.lineinfile:
-        path: "{{ host_project_dir }}/.env"
-        regexp: "^SECRET_KEY="
-        line: "SECRET_KEY={{ seret_key.stdout }}"
-      tags:
-        - set_secret_key
+    - name: Creating env file with content
+      copy:
+        dest: "{{ host_project_dir }}/.env"
+        content: |
+          OPERATION_MODE={{ deploy_env }}
+          SECRET_KEY={{ seret_key.stdout }}
+          COMPOSE_PROFILES={{ deploy_env }}
+          DATABASES_DEFAULT_PASSWORD={{ DATABASES_DEFAULT_PASSWORD }}
+          BASE_DIR=/app
+      vars:
+        DATABASES_DEFAULT_PASSWORD: {}
 
-    - name: Modify OPERATION_MODE
-      ansible.builtin.lineinfile:
-        path: "{{ host_project_dir }}/.env"
-        search_string: 'OPERATION_MODE=dev'
-        line: "OPERATION_MODE={{ deploy_env }}"
       tags:
-        - modify_operation_mode
-
-    - name: Modify COMPOSE_PROFILES
-      ansible.builtin.lineinfile:
-        path: "{{ host_project_dir }}/.env"
-        search_string: 'COMPOSE_PROFILES=dev'
-        line: "COMPOSE_PROFILES={{ deploy_env }}"
-      tags:
-        - modify_compose_profiles
-
-    - name: Add BASE_DIR
-      ansible.builtin.lineinfile:
-        path: "{{ host_project_dir }}/.env"
-        line: "BASE_DIR=/app"
-        insertafter: EOF
-      tags:
-        - add_base_dir
+        - create_env
 
     - name: Copy docker-compose.yml
       ansible.builtin.template:
