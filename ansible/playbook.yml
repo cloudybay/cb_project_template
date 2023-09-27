@@ -41,7 +41,6 @@
         content: |
           OPERATION_MODE={{ deploy_env }}
           SECRET_KEY={{ seret_key.stdout }}
-          COMPOSE_PROFILES={{ deploy_env }}
           DATABASES_DEFAULT_PASSWORD={{ DATABASES_DEFAULT_PASSWORD }}
           BASE_DIR=/app
       vars:
