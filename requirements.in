@@ -1,0 +1,7 @@
+requests
+bleach
+django-cors-headers
+gunicorn
+pytz
+django==4.2.5
+python-dotenv @ git+https://github.com/cloudybay/python-dotenv@v0.1.0-cb

@@ -1,6 +1,6 @@
 [submodule "cb/log"]
 	path = cb/log
-	url = ../../cloudybay/cb-log
+	url = ../../cloudybay/cb-log.git
 [submodule "cb/util"]
 	path = cb/util
 	url = ../../cloudybay/cb-util.git
