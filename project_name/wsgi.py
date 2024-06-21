@@ -12,10 +12,4 @@ load_dotenv()
 
 from django.core.wsgi import get_wsgi_application
 
-from cb import log
-
-collective_name = "wsgi"
-log.set_collective_name(collective_name)
-log.verbose("using collective name:", collective_name)
-
 application = get_wsgi_application()

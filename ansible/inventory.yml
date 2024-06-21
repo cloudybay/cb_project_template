@@ -1,8 +1,0 @@
-all:
-  hosts:
-    staging:
-      ansible_host: {}
-      ansible_port: {}
-      ansible_password: {}
-      ansible_become_password: {}
-      ansible_user: {}
