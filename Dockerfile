@@ -1,6 +1,6 @@
 FROM python:3.12.3-slim-bookworm AS builder
 
-RUN apt-get update && apt-get install -y git libpq-dev gcc && apt clean
+RUN apt-get update && apt-get install -y git libpq-dev && apt clean
 
 RUN python3 -m venv /opt/venv
 
@@ -13,7 +13,7 @@ RUN /opt/venv/bin/python3 -m pip install -r /requirements.txt && /opt/venv/bin/p
 
 FROM python:3.12.3-slim-bookworm AS base
 
-RUN apt-get update && apt-get install -y git libpq-dev gcc && apt clean
+RUN apt-get update && apt-get install -y git libpq-dev && apt clean
 
 COPY --from=builder /opt/venv /opt/venv
 
