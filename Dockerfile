@@ -1,9 +1,30 @@
-FROM registry.gitlab.com/cloudybay/{{ repository_name }}:base
+FROM python:3.12.3-slim-bookworm AS builder
 
-ARG PROJECT_DIR=/app
+RUN apt-get update && apt-get install -y git && apt clean
 
-COPY --chown=cloudybay . $PROJECT_DIR
+RUN python3 -m venv /opt/venv
 
-WORKDIR $PROJECT_DIR
+COPY requirements.txt /
 
-RUN python3 init_env.py && DJANGO_SETTINGS_MODULE={{ project_name }}.settings python3 manage.py collectstatic --no-input
+RUN /opt/venv/bin/python3 -m pip install --upgrade pip
+RUN /opt/venv/bin/python3 -m pip install -r /requirements.txt && /opt/venv/bin/python3 -m pip cache purge
+
+#######################################################
+
+FROM python:3.12.3-slim-bookworm AS base
+
+RUN apt-get update && apt-get install -y git && apt clean
+
+COPY --from=builder /opt/venv /opt/venv
+
+ENV PATH=/opt/venv/bin:$PATH
+
+#######################################################
+
+FROM base AS source
+
+USER 1000:1000
+
+COPY --chown=1000:1000 . /app
+
+WORKDIR /app

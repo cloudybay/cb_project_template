@@ -16,24 +16,24 @@ $ docker run -it [--rm] --name {{ project_name }} [-p -v -w] registry.gitlab.com
 
 ```
 
-# 安裝虛擬環境
-$ conda env create -f __setup/conda-environments.yml -n {{ project_name }}
+# 安裝 venv 虛擬環境
+$ python3 -m venv {{ project_name }}
 
-# 進入 conda 虛擬環境
-$ source activate {{ project_name }}
+# 進入 虛擬環境
+$ source {{ project_name }}/bin/activate
 
 ```
 
 **範例:**
 ```
-$ docker run -it --name {{ project_name }} -v $(pwd):/opt/CloudyBay/{{ project_name }} registry.gitlab.com/cloudybay/{{ repository_name }}:base bash
+$ docker run -it --name {{ project_name }} -v $(pwd):/app registry.gitlab.com/cloudybay/{{ repository_name }}:master bash
 ```
 ---
 
 # 專案初始化順序
 
 1. git clone git@gitlab.com:cloudybay/{{ repository_name }}.git or https://gitlab.com/cloudybay/{{ repository_name }}.git
-2. 進入容器或是 conda 虛擬環境
+2. 進入容器或是 venv 虛擬環境
 3. 執行 python init_env.py
 4. 修改 .env 內的參數
 5. 複製 conf/dev.readme -> conf/dev
