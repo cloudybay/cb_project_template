@@ -90,7 +90,7 @@ LOGGING_CONF = {
     'loggers': {
         'cb': {
             'level': 'INFO',
-            'handlers': ['console', 'file'],
+            'handlers': ['console'],
             'filters': ['user_info'],
             'propagate': False,
         }
