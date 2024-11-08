@@ -63,12 +63,12 @@ LOGGING_CONF = {
         'json': {
             '()': JsonFormatter,
             'datefmt': '%Y-%m-%dT%H:%M:%S.%f%z',
-            'tz': pytz.timezone('Asia/Taipei')
+            'tz': pytz.timezone(os.environ['TIME_ZONE'])
         },
         'verbose': {
             '()': TimeZoneFormatter,
             'format': '[%(asctime)s %(pathname)s:%(lineno)d (%(process)d) %(levelname)s] %(message)s',
-            'tz': pytz.timezone('Asia/Taipei')
+            'tz': pytz.timezone(os.environ['TIME_ZONE'])
         }
     },
     'filters': {
