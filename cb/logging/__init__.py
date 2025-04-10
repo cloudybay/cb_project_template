@@ -3,7 +3,7 @@ import logging
 import logging.config
 import json
 import traceback
-import pytz
+from zoneinfo import ZoneInfo
 from datetime import datetime
 
 
@@ -14,18 +14,18 @@ class JsonFormatter(logging.Formatter):
 
     def format(self, record):
         log_record = {
-            'level': record.levelname,
-            'time': self.formatTime(record),
-            'lineno': record.lineno,
-            'path': record.pathname,
-            'process': record.process,
-            'message': record.getMessage(),
-            'username': record.username if hasattr(record, 'username') else None,
-            'uid': record.uid if hasattr(record, 'uid') else None,
-            'gid': record.gid if hasattr(record, 'gid') else None,
+            "level": record.levelname,
+            "time": self.formatTime(record),
+            "lineno": record.lineno,
+            "path": record.pathname,
+            "process": record.process,
+            "message": record.getMessage(),
+            "username": record.username if hasattr(record, "username") else None,
+            "uid": record.uid if hasattr(record, "uid") else None,
+            "gid": record.gid if hasattr(record, "gid") else None,
         }
         if record.exc_info:
-            log_record['exception'] = ''.join(traceback.format_exception(*record.exc_info))
+            log_record["exception"] = "".join(traceback.format_exception(*record.exc_info))
         return json.dumps(log_record, ensure_ascii=False)
 
     def formatTime(self, record):
@@ -57,45 +57,62 @@ class UserInfoFilter(logging.Filter):
 
 
 LOGGING_CONF = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'json': {
-            '()': JsonFormatter,
-            'datefmt': '%Y-%m-%dT%H:%M:%S.%f%z',
-            'tz': pytz.timezone(os.environ['TIME_ZONE'])
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "json": {
+            "()": JsonFormatter,
+            "datefmt": "%Y-%m-%dT%H:%M:%S.%f%z",
+            "tz": ZoneInfo(os.environ["TIME_ZONE"])
         },
-        'verbose': {
-            '()': TimeZoneFormatter,
-            'format': '[%(asctime)s %(pathname)s:%(lineno)d (%(process)d) %(levelname)s] %(message)s',
-            'tz': pytz.timezone(os.environ['TIME_ZONE'])
+        "verbose": {
+            "()": TimeZoneFormatter,
+            "format": "[%(asctime)s %(pathname)s:%(lineno)d (%(process)d) %(levelname)s] %(message)s",
+            "tz": ZoneInfo(os.environ["TIME_ZONE"])
         }
     },
-    'filters': {
-        'user_info': {
-            '()': UserInfoFilter,
+    "filters": {
+        "user_info": {
+            "()": UserInfoFilter,
         }
     },
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'json',
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "json",
         },
-        'file': {
-            'class': 'logging.FileHandler',
-            'formatter': 'verbose',
-            'filename': os.path.join(os.environ['BASE_DIR'], 'logfiles', 'verbose.log'),
-        }
+        "file": {
+            "class": "logging.FileHandler",
+            "filename": os.path.join(os.environ["BASE_DIR"], "logfiles", "verbose.log"),
+            "formatter": "verbose",
+        },
     },
-    'loggers': {
-        'cb': {
-            'level': 'INFO',
-            'handlers': ['console'],
-            'filters': ['user_info'],
-            'propagate': False,
-        }
+    "loggers": {
+        "prod": {
+            "level": "INFO",
+            "handlers": ["console"],
+            "filters": ["user_info"],
+            "propagate": False,
+        },
+        "stagging": {
+            "level": "DEBUG",
+            "handlers": ["console"],
+            "filters": ["user_info"],
+            "propagate": False,
+        },
+        "dev": {
+            "level": "DEBUG",
+            "handlers": ["console", "file"],
+            "filters": ["user_info"],
+            "propagate": False,
+        },
     }
 }
 
 logging.config.dictConfig(LOGGING_CONF)
-logger = logging.getLogger('cb')
+
+def getLogger(logger_name=None):
+    if logger_name is None:
+        return logging.getLogger(os.environ["DEFAULT_LOGGER"])
+
+    return logging.getLogger(logger_name)
