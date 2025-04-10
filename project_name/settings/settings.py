@@ -78,13 +78,13 @@ WSGI_APPLICATION = '{{ project_name }}.wsgi.application'
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+TIME_ZONE = os.environ["TIME_ZONE"]
 
-TIME_ZONE = 'UTC'
+USE_TZ = True
+
+LANGUAGE_CODE = 'zh-Hant'
 
 USE_I18N = True
-
-USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
