@@ -20,7 +20,7 @@ class RequestLogMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        logger = logging.getLogger('cb')
+        logger = logging.getLogger()
         if not any(isinstance(f, RequestFilter) for f in logger.filters):
             logger.addFilter(RequestFilter(request))
 
