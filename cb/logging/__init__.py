@@ -112,11 +112,14 @@ LOGGING_CONF = {
 logging.config.dictConfig(LOGGING_CONF)
 
 
+_current_logger_name = None
 def getLogger(logger_name=None):
+    global _current_logger_name
+
     if logger_name is None:
-        if not hasattr(logging, "___begin_used_logger_name"):
+        if _current_logger_name is None:
             return logging.getLogger(os.environ["DEFAULT_LOGGER"])
         else:
-            return logging.getLogger(logging.___begin_used_logger_name)
-    setattr(logging, "___begin_used_logger_name", logger_name)
+            return logging.getLogger(_current_logger_name)
+    _current_logger_name = logger_name
     return logging.getLogger(logger_name)
