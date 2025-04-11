@@ -1,4 +1,5 @@
 import logging
+from . import getLogger
 
 
 class RequestFilter(logging.Filter):
@@ -20,7 +21,7 @@ class RequestLogMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        logger = logging.getLogger()
+        logger = getLogger()
         if not any(isinstance(f, RequestFilter) for f in logger.filters):
             logger.addFilter(RequestFilter(request))
 
