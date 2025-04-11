@@ -1,7 +1,7 @@
 requests
-bleach
+nh3
 django-cors-headers
-gunicorn==21.2.0
+gunicorn==23.0.0
 pytz
-django==4.2.5
+django==5.2.0
 python-dotenv @ git+https://github.com/cloudybay/python-dotenv@v0.1.0-cb
