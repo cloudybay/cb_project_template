@@ -24,7 +24,7 @@ def __check_git_pre_commit(home):
 def init_dotenv():
     src_envs = dotenv_values(EXAMPLE_DOTENV)
     if not src_envs:
-        print('No such .env.readme file found.')
+        print(f'No such {EXAMPLE_DOTENV} file found.')
         sys.exit(1)
 
     target_dotenv_file = find_dotenv(DOTENV_FILE)
